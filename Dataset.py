@@ -6,7 +6,7 @@ import cv2
 x_transforms = transforms.Compose([
 							transforms.Resize((256,256)),
 							transforms.ToTensor(),
-							transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
+							#transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 						])
 def get_samples():
 	samples=[]
@@ -23,7 +23,6 @@ def get_samples():
 			y2=line.split(" ")[5].split("\n")[0]
 			samples.append([img_path,length,x1,y1,x2,y2])
 	return samples
-#a=get_samples()
 import math
 max_length=int(math.sqrt(256**2+256**2))
 class CaptchaData(Dataset):
@@ -45,13 +44,9 @@ class CaptchaData(Dataset):
         y1=int(self.Samples[index][3])/256
         x2=int(self.Samples[index][4])/256
         y2=int(self.Samples[index][5])/256
-
-        label=np.array([length,x1,y1,x2,y2]).astype(np.float32)
-
-
+        if(math.sqrt(x1**2+y1**2)>math.sqrt(x2**2+y2**2)):
+        	label=np.array([length,x1,y1,x2,y2]).astype(np.float32)
+        else:
+        	label=np.array([length,x2,y2,x1,y1]).astype(np.float32)
         return img_tensor,label
 
-#cap=CaptchaData()
-#dataload=DataLoader(cap,12,drop_last=False)
-#for img,label in dataload:
-#	print(img)
