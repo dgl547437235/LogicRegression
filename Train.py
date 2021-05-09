@@ -14,10 +14,11 @@ def main():
 	net=net.cuda()
 	data_cap=CaptchaData()#加载数据集
 	data_loader=DataLoader(data_cap,30,True)#加载数据通道
-	optimizer = torch.optim.Adam(net.parameters(), lr=1e-3)#定义优化器
+	optimizer = torch.optim.Adam(net.parameters(), lr=1e-4)#定义优化器
 	criterion=torch.nn.SmoothL1Loss()
-	criterion=torch.nn.MSELoss()
+	#criterion=torch.nn.MSELoss()
 	for epoch in range(10000):
+		net.cuda()
 		net.train()
 		losses=[]
 		for i,(img,label) in enumerate(data_loader):
@@ -31,5 +32,11 @@ def main():
 		if(epoch%5==0):
 			print("loss:%5f"%(np.mean(np.array(losses))))
 			torch.save(net.state_dict(),"net.pt")
+			dumpy_input=torch.randn(1,3,256,256,device="cpu")
+			input_names = ["data"]
+			output_names = ["output"]
+			
+			torch.onnx.export(net.cpu(),dumpy_input,"net.onnx", input_names=input_names,
+                      output_names=output_names)
 if __name__=="__main__":
 	main()
