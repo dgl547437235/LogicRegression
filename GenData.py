@@ -7,6 +7,8 @@ def get_random_color():
 	return (random.randint(0,255),random.randint(0,255),random.randint(0,255))
 
 def GenData():
+	if(not os.path.exists("img")):
+		os.mkdir("img")
 	file=open("train.txt","w",encoding="utf-8-sig")
 	for i in range(1000):
 		zero_mat=np.zeros([256,256,3],np.uint8)
@@ -21,12 +23,6 @@ def GenData():
 		cv2.imwrite(img_path,zero_mat)
 		file.write(img_path+" "+str(length)+" "+str(loc_x1)+" "+str(loc_y1)+" "+str(loc_x2)+" "+str(loc_y2)+"\n")
 	file.close()
-
-
-
-
-
-
 
 if __name__=="__main__":
 	GenData()
