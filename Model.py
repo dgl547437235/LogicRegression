@@ -60,9 +60,6 @@ class MobileV2(nn.Module):
 		out=self.fc(y.view(-1,16*4*4))
 		return out
 
-#net=MobileV2()
-#x=torch.randn(10,3,256,256)
-#y=net(x)
 
 
 	
